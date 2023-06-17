@@ -1,0 +1,27 @@
+#useful R libraries for dealing with data from databases.
+library(RODBC)
+library(data.table)
+library(dplyr)
+library(plyr)
+library(purrr)
+library(tidyverse)  ##
+
+#database connection for a SQL local server
+dbconnection <- odbcDriverConnect("Driver=SQL Server Native Client 11.0;Server=localhost; Database=xxx;Uid=; Pwd=; trusted_connection=yes")
+
+#build the SQL values to insert into table
+
+values <- paste("(",1,",""'","tekst","'",")", sep="", collapse=",") 
+# (1,'tekst')
+cmd <- paste("insert into dbo.xxx values ", values)
+# run the query, inserting values into a database table
+sqlQuery(dbconnection, cmd, as.is=TRUE)
+#close the connection again, just for good measure
+odbcClose(dbconnection)
+
+#same connection, different query
+dbconnection <- odbcDriverConnect("Driver=SQL Server Native Client 11.0;Server=localhost; Database=xxx;Uid=; Pwd=; trusted_connection=yes")
+# instead select all from same database table
+dataudvalg <- sqlQuery(dbconnection,paste("SELECT * FROM dbo.xxx"))
+#close the connection again, just for good measure
+odbcClose(dbconnection)
